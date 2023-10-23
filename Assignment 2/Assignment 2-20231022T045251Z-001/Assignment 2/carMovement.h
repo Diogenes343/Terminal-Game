@@ -3,6 +3,6 @@
 
 struct Car;
 
-void moveCar(Car* car, char** gameMap, int mapRow, int mapCol);
+void moveCar(struct Car* car, char** gameMap, int mapRow, int mapCol);
 
 #endif
