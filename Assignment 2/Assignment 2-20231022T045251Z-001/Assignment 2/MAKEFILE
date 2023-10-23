@@ -30,6 +30,7 @@ clean:
 run: $(TARGET)
 	./$(TARGET)
 
+
 # Phony target to compile and run with valgrind for memory checking
 valgrind: $(TARGET)
 	valgrind ./$(TARGET)
