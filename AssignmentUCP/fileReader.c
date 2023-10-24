@@ -6,7 +6,7 @@ int getMap(Map *map, const char *filepath) {
     FILE *fp;
     int **mapArray;
     int row, col;
-    int error;
+    int error = 0;
     int i, j, k;
 
     if (map == NULL) {

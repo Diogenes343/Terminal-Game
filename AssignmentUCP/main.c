@@ -13,20 +13,24 @@ int main() {
     Map map;
     Car car;
     char move;
+    int keep_going;
+    int valid_map;
+    
+    valid_map = getMap(&map, "map.txt");
 
-    if( getMap(&map, "map.txt") != 0){
+    if( valid_map != 0){
         printf("Error reading map file.\n");
         return 1;
     }
 
     intialiseGame(&map, &gameState, &car);
-
+    keep_going = endGame();
     /* check for valid map*/
-    while(!endGame()) {
+    while(keep_going) {
         clearTerminal();
         printGame(&map, &gameState);
         move = getUserMove();
-        updateGame(move, &map, &gameState, &car);
+        keep_going = updateGame(move, &map, &gameState, &car);
     }
     clearGame(&map, &gameState, &car);
     return 0;

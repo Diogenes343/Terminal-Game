@@ -32,21 +32,21 @@ void intialiseGame(Map *map, GameState *gameState, Car *car) {
 
     for(i = 0; i < map->row; i++){
         for(j = 0; j < map->col; j++){
-            if(i > 0 || i == map->row - 1 || j > 0 || j == map->col- 1){
+            if(i == 0 || i == map->row - 1 || j == 0 || j == map->col- 1){
                 gameState->gameMap[i][j] = '*';    /* create map border*/
-            }else if( gameState->gameMap[i][j] == 0){
+            }else if( map->mapArray[i][j] == 0){
                 gameState->gameMap[i][j] = ' ';    /* empty space */
-            }else if( gameState->gameMap[i][j] == 1){
+            }else if( map->mapArray[i][j] == 1){
                 gameState->gameMap[i][j] = '.';    /* road */
-            }else if ( gameState->gameMap[i][j] == 2){
+            }else if ( map->mapArray[i][j] == 2){
                 gameState->gameMap[i][j] = '>';    /* car facing right */
                 car->carRow = i;
                 car->carCol = j;
-            }else if ( gameState->gameMap[i][j] == 3){
+            }else if ( map->mapArray[i][j] == 3){
                 gameState->gameMap[i][j] = 'P';
                 gameState->playerRow = i;
                 gameState->playerCol = j;    /* player */
-            }else if ( gameState->gameMap[i][j] == 4){
+            }else if ( map->mapArray[i][j] == 4){
                 gameState->gameMap[i][j] = 'G';
                 gameState->goalRow = i;
                 gameState->goalCol = j;    /* goal */
