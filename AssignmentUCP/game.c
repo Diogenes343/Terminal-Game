@@ -58,13 +58,14 @@ void intialiseGame(Map *map, GameState *gameState, Car *car) {
 
 }
 
-int updateGame(char move, Map *map, GameState *gameState, Car *car) {
+int updateGame(char move, Map* map, GameState* gameState, Car* car) {
 
 
     int newPlayerRow, newPlayerCol;
     newPlayerRow = gameState->playerRow;
     newPlayerCol = gameState->playerCol;
-    /*moveCar(int* carRow, int* carCol, int* direction, char** gameMap, int mapRow, int mapCol)*/
+
+    moveCar(car, map, gameState);
 
     switch(move) {
         case 'w':
@@ -111,14 +112,20 @@ int endGame() {
 }
 
 void clearGame(Map *map, GameState *gameState, Car *car) {
-    free(gameState ->gameMap);
-    free(gameState);
 
-    free(map->mapArray);
-    free(map);
-    
-    free(car);
-    
+    if(gameState){
+        free(gameState ->gameMap);
+        free(gameState);
+    }
+
+    if(map){
+        free(map->mapArray);
+        free(map);
+    }
+
+    if(car){
+        free(car);
+    }
 }
 
 int printGame(Map* map, GameState* GameState) {

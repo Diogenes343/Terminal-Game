@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c89 -ansi -Werror
+CFLAGS = -Wall -pedantic -std=c89 -ansi -Werror -g
 
 # Executable name
 TARGET = traffic

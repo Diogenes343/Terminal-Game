@@ -18,7 +18,6 @@ typedef struct Car{
     int carRow;
     int carCol;
     int carDirection;
-    char carCharacter;
 } Car;
 
 void intialiseGame(Map* map, GameState* gameState, Car* car);
