@@ -2,9 +2,10 @@
 #define GAME_H
 
 #include "fileReader.h"
-
+#include "undoFunc.h"
 
 /* Forward declaration */
+Stack stack;
 
 typedef struct GameState {
     char** gameMap;
@@ -20,8 +21,10 @@ typedef struct Car{
     int carDirection;
 } Car;
 
+
+
 void intialiseGame(Map* map, GameState* gameState, Car* car, int blank_bool);
-int updateGame(char move, Map* map, GameState* blankState, GameState* gameState, Car* car, int directions[4][2], char carChar);
+int updateGame(char move, Map* map, GameState* blankState, GameState* gameState, Car* car, Stack* stack, int directions[4][2], char carChar);
 int endGame();
 void clearGame(Map* map, GameState* gameState, GameState* blankState, Car *car);
 int printGame(Map* map, GameState* gameState);

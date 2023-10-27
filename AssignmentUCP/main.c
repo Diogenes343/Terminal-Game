@@ -4,7 +4,7 @@
 #include "fileReader.h"
 #include "game.h"
 #include "Terminal.h"
-
+#include "undoFunc.h"
 
  
 int main() {
@@ -15,6 +15,8 @@ int main() {
     Map map;
     Car car;
     Car blank_car;
+    Stack stack;
+
     char move;
     int finished;
     int valid_map;
@@ -26,7 +28,7 @@ int main() {
 
     valid_map = getMap(&map, "map.txt");
     
-
+    initStack(&stack);
 
     if( valid_map != 0){
         printf("Error reading map file.\n");
@@ -91,7 +93,7 @@ int main() {
                 break;
     }
 
-        finished = updateGame(move, &map, &blankState, &gameState, &car, directions, carChar);
+        finished = updateGame(move, &map, &blankState, &gameState, &car, &stack, directions, carChar);
     }
 
     clearGame(&map, &gameState, &blankState, &car);

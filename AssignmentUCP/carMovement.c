@@ -5,11 +5,11 @@
 #include "fileReader.h"
 #include "game.h"
 
-void moveCar(Car* car, Map* map, GameState* gameState, int directions[4][2], char carChar) {
+int moveCar(Car* car, Map* map, GameState* gameState, GameState* blankState, int directions[4][2], char carChar) {
     int i;
     int newCarRow, newCarCol;
     int validMove = 0;
-
+    int deadplayer = 0;
 
     for (i = 0; i < 4 && validMove == 0; i++) {
         int newDirection = i % 4; /* Rotate direction to the next one (0 to 3). */
@@ -22,7 +22,11 @@ void moveCar(Car* car, Map* map, GameState* gameState, int directions[4][2], cha
 
 
             if (newCarRow >= 0 && newCarRow < map->row && newCarCol >= 0 && newCarCol < map->col) {
-                if (gameState->gameMap[newCarRow][newCarCol] == '.' || gameState->gameMap[newCarRow][newCarCol] == 'P') {
+                /*check blankstate for road only*/
+                if (blankState->gameMap[newCarRow][newCarCol] == '.') {
+                    if( gameState->gameMap[newCarRow][newCarCol] == 'P'){
+                        deadplayer  =  1;
+                    }
                     validMove++;
                     gameState->gameMap[car->carRow][car->carCol] = '.'; /* Mark the current position as empty. */
 
@@ -49,6 +53,7 @@ void moveCar(Car* car, Map* map, GameState* gameState, int directions[4][2], cha
         printf("No valid move found.\n");
         printf("Invalid map\n");
     }
+    return deadplayer;
 }
 
 /*

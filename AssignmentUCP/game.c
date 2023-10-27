@@ -4,6 +4,7 @@
 #include "game.h"
 #include "fileReader.h"
 #include "carMovement.h"
+#include "undoFunc.h"
 
 #define MAP_BORDER '*'
 #define ROAD '.'
@@ -20,7 +21,6 @@ void intialiseGame(Map *map, GameState *gameState, Car *car, int blank_bool) {
 
     int i;
     int j;
-
 
 
     gameState->gameMap = (char **)malloc(map->row * sizeof(char *));
@@ -72,8 +72,12 @@ void intialiseGame(Map *map, GameState *gameState, Car *car, int blank_bool) {
 
 }
 
-int updateGame(char move, Map* map, GameState * blankState, GameState* gameState, Car* car, int directions[4][2],char carChar) {
+int updateGame(char move, Map* map, GameState * blankState, GameState* gameState, Car* car, Stack* stack, int directions[4][2],char carChar) {
+    
+
     int i,j;
+
+    int deadplayer;
 
     int newPlayerRow, newPlayerCol;
 
@@ -84,59 +88,61 @@ int updateGame(char move, Map* map, GameState * blankState, GameState* gameState
     newPlayerCol = gameState->playerCol;
 
     finished_flag = 0;
-    switch(move) {
-        case 'w':
-            newPlayerRow --;
-            break;
-        case 'a':
-            newPlayerCol --;
-            break;
-        case 's':
-            newPlayerRow ++;
-            break;
-        case 'd':
-            newPlayerCol ++;
-            break;
-        /*case 'u':
-            undo feature
-            undoGameState(map);
-            break;*/
+
+    if(move  ==  'u'){
+        gameState = pop(stack);
     }
 
-    
-    /* silly code to copy each character of the map to the other one*/
-    for(i=0; i < map->row; i++){
-        for(j=0; j < map->col; j++){
-            gameState->gameMap[i][j] = blankState->gameMap[i][j];
-        }
-    }
-
-    
-    
-    if (newPlayerRow > 0 && newPlayerRow < map->row - 1 && newPlayerCol > 0 && newPlayerCol < map->col -1){
-        gameState->playerRow = newPlayerRow;
-        gameState->playerCol = newPlayerCol;
-
-        gameState->gameMap[newPlayerRow][newPlayerCol] = 'P';
-
-        moveCar(car, map, gameState, directions, carChar);
-
-        printf("\nplayer col %d and row %d\n", newPlayerCol, newPlayerRow);
-        printf("\ncar row %d and col %d\n", car->carRow, car->carCol);
-        printf("%c", gameState->gameMap[newPlayerRow][newPlayerCol]);
-        if (gameState->gameMap[newPlayerRow][newPlayerCol] == 'G'){
-            
-            printf("you win!");
-            finished_flag = endGame();
-        }
-
-        if(gameState->gameMap[newPlayerRow][newPlayerCol] == gameState->gameMap[car->carRow][car->carCol]){
-            gameState->gameMap[newPlayerRow][newPlayerCol] = 'X';
-            printf("you lose!");
-            finished_flag = endGame();
+    if(move != 'u'){
+        switch(move) {
+            case 'w':
+                newPlayerRow --;
+                break;
+            case 'a':
+                newPlayerCol --;
+                break;
+            case 's':
+                newPlayerRow ++;
+                break;
+            case 'd':
+                newPlayerCol ++;
+                break;
         }
 
         
+        /* silly code to copy each character of the map to the other one*/
+        for(i=0; i < map->row; i++){
+            for(j=0; j < map->col; j++){
+                gameState->gameMap[i][j] = blankState->gameMap[i][j];
+            }
+        }
+
+    
+        /*every thing that moves moves in the below block*/
+        if (newPlayerRow > 0 && newPlayerRow < map->row - 1 && newPlayerCol > 0 && newPlayerCol < map->col -1){
+            gameState->playerRow = newPlayerRow;
+            gameState->playerCol = newPlayerCol;
+
+            gameState->gameMap[newPlayerRow][newPlayerCol] = 'P';
+
+        
+
+            deadplayer = moveCar(car, map, gameState, blankState, directions, carChar);
+
+            if (gameState->playerRow == gameState->goalRow && gameState->playerCol == gameState -> goalCol){
+                
+                printf("you win!");
+                finished_flag = endGame();
+            }
+
+            if(deadplayer){
+                gameState->gameMap[newPlayerRow][newPlayerCol] = 'X';
+                printf("you lose!");
+                finished_flag = endGame();
+            }
+            push(&stack, &gameState);
+            
+        }
     }
     return finished_flag;
 }
@@ -154,7 +160,7 @@ void clearGame(Map* map, GameState* gameState, GameState* blankstate, Car* car) 
             free(gameState->gameMap[i]);
         }
         free(gameState->gameMap);
-        /*free(gameState);*/
+        
     }
 
     if (blankstate) {
@@ -163,7 +169,7 @@ void clearGame(Map* map, GameState* gameState, GameState* blankstate, Car* car) 
             free(blankstate->gameMap[i]);
         }
         free(blankstate->gameMap);
-        /*free(blankstate);*/
+        
     }
 
     if (map) {
@@ -172,21 +178,21 @@ void clearGame(Map* map, GameState* gameState, GameState* blankstate, Car* car) 
             free(map->mapArray[i]);
         }
         free(map->mapArray);
-        /*free(map);*/
+        
     }
 
     if (car) {
         printf("car free\n");
-        /*free(car);*/
+        
     }
 }
 
 
-int printGame(Map* map, GameState* GameState) {
+int printGame(Map* map, GameState* gameState) {
     int i, j;
     for(i = 0; i < map->row; i++){
         for(j = 0; j < map->col; j++){
-            printf("%c", GameState->gameMap[i][j]);
+            printf("%c", gameState->gameMap[i][j]);
         }
         printf("\n");
     }
