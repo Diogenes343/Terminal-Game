@@ -6,13 +6,13 @@ CFLAGS = -Wall -pedantic -std=c89 -ansi -Werror -g
 TARGET = traffic
 
 # Source files
-SRCS = main.c game.c Terminal.c fileReader.c terminalInput.c carMovement.c
+SRCS = main.c game.c Terminal.c fileReader.c terminalInput.c carMovement.c undoFunc.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)
 
 # Header files
-DEPS = game.h Terminal.h carMovement.h terminalInput.h fileReader.h
+DEPS = game.h Terminal.h carMovement.h terminalInput.h fileReader.h undoFunc.h
 
 # Rule to build the executable
 $(TARGET): $(OBJS)
